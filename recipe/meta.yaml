@@ -10,7 +10,7 @@ source:
   sha256: 8cf6ddbed81b931887d8432e956b125bdda31f7d2a8fbbe40eaff13b1e3473ab
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win or py2k]
 
 requirements:
@@ -29,7 +29,7 @@ requirements:
     - hepmc2
     - yaml-cpp
     - numpy
-    - matplotlib
+    - matplotlib-base
     - cython
     - cymove
   run:
@@ -38,7 +38,7 @@ requirements:
     - yaml-cpp
     - hepmc2
     - {{ pin_compatible('numpy') }}
-    - matplotlib
+    - matplotlib-base
 
 test:
   imports:
