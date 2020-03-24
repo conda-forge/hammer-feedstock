@@ -29,7 +29,7 @@ requirements:
     - hepmc2
     - yaml-cpp
     - numpy
-    - matplotlib
+    - matplotlib-base
     - cython
     - cymove
   run:
@@ -38,7 +38,7 @@ requirements:
     - yaml-cpp
     - hepmc2
     - {{ pin_compatible('numpy') }}
-    - matplotlib
+    - matplotlib-base
 
 test:
   imports:
