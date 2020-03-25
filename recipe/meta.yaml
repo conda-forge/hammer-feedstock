@@ -10,7 +10,7 @@ source:
   sha256: 8cf6ddbed81b931887d8432e956b125bdda31f7d2a8fbbe40eaff13b1e3473ab
 
 build:
-  number: 2
+  number: 3
   skip: true  # [win or py2k]
 
 requirements:
@@ -24,7 +24,7 @@ requirements:
     - python
     - root_base
     - root-binaries
-    - root-dependencies
+    - root-dependencies =6.20.0
     - boost-cpp
     - hepmc2
     - yaml-cpp
