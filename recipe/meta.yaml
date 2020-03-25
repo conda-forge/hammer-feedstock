@@ -24,7 +24,7 @@ requirements:
     - python
     - root_base
     - root-binaries
-    - root-dependencies =6.20.0
+    - root-dependencies
     - boost-cpp
     - hepmc2
     - yaml-cpp
