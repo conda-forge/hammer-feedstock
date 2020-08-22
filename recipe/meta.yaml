@@ -8,6 +8,8 @@ package:
 source:
   url: https://gitlab.com/mpapucci/Hammer/-/archive/v{{ version }}/Hammer-v{{ version }}.tar.gz
   sha256: ec70a8a67f7feb7b4013bb78af22481186665eb2b6803c7bc441f464b63415a9
+  patches:
+    - 0001-Add-missing-includes.patch
 
 build:
   number: 0

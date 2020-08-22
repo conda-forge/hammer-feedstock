@@ -1,0 +1,26 @@
+From 9516a61054d30c5579f675e85fa130afc6395fa1 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Sat, 22 Aug 2020 21:58:55 +0200
+Subject: [PATCH] Add missing includes
+
+---
+ include/Hammer/Math/Utils.hh | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/Hammer/Math/Utils.hh b/include/Hammer/Math/Utils.hh
+index bc3cb11f..b295eb37 100644
+--- a/include/Hammer/Math/Utils.hh
++++ b/include/Hammer/Math/Utils.hh
+@@ -12,7 +12,9 @@
+ #ifndef HAMMER_MATH_UTILS
+ #define HAMMER_MATH_UTILS
+ 
++#include <climits>
+ #include <complex>
++#include <cstring>
+ #include <limits>
+ 
+ namespace Hammer {
+-- 
+2.27.0
+
