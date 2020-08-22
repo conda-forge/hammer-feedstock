@@ -1,5 +1,5 @@
 {% set name = "hammer" %}
-{% set version = "1.0.0" %}
+{% set version = "1.1.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,10 +7,12 @@ package:
 
 source:
   url: https://gitlab.com/mpapucci/Hammer/-/archive/v{{ version }}/Hammer-v{{ version }}.tar.gz
-  sha256: 8cf6ddbed81b931887d8432e956b125bdda31f7d2a8fbbe40eaff13b1e3473ab
+  sha256: ec70a8a67f7feb7b4013bb78af22481186665eb2b6803c7bc441f464b63415a9
+  patches:
+    - 0001-Add-missing-includes.patch
 
 build:
-  number: 6
+  number: 0
   skip: true  # [win or py2k]
 
 requirements:
@@ -72,7 +74,7 @@ about:
   license: GPL-3.0-only
   license_family: GPL
   license_file: COPYING
-  summary: 'Helicity Amplitude Module for Matrix Element Reweighting'
+  summary: Helicity Amplitude Module for Matrix Element Reweighting
 
   description: |
     A C++ software library, designed to provide fast and efficient reweighting
