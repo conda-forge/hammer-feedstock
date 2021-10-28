@@ -1,5 +1,5 @@
 {% set name = "hammer" %}
-{% set version = "1.1.0" %}
+{% set version = "1.2.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,12 +7,12 @@ package:
 
 source:
   url: https://gitlab.com/mpapucci/Hammer/-/archive/v{{ version }}/Hammer-v{{ version }}.tar.gz
-  sha256: ec70a8a67f7feb7b4013bb78af22481186665eb2b6803c7bc441f464b63415a9
+  sha256: f69c25cc494efa532c40bc6ea11f6318b41bc04390738e86061660c83ef613d6
   patches:
     - 0001-Add-missing-includes.patch
 
 build:
-  number: 7
+  number: 0
   skip: true  # [win or py2k]
 
 requirements:
