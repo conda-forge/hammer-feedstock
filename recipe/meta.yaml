@@ -1,5 +1,5 @@
 {% set name = "hammer" %}
-{% set version = "1.2.0" %}
+{% set version = "1.2.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,12 +7,12 @@ package:
 
 source:
   url: https://gitlab.com/mpapucci/Hammer/-/archive/v{{ version }}/Hammer-v{{ version }}.tar.gz
-  sha256: f69c25cc494efa532c40bc6ea11f6318b41bc04390738e86061660c83ef613d6
+  sha256: caeceff0135b7fef5f392915c8362138b200eacda19d8fd78b223c538449dfb9
   patches:
     - 0001-Add-missing-includes.patch
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win or py2k]
 
 requirements:
@@ -32,6 +32,7 @@ requirements:
     - matplotlib-base
     - cython
     - cymove
+    - setuptools
   run:
     - python
     - boost-cpp
