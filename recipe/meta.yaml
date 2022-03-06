@@ -32,6 +32,7 @@ requirements:
     - matplotlib-base
     - cython
     - cymove
+    - setuptools
   run:
     - python
     - boost-cpp
