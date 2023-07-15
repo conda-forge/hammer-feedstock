@@ -9,7 +9,7 @@ source:
   url: https://gitlab.com/mpapucci/Hammer/-/archive/v{{ version }}/Hammer-v{{ version }}.tar.gz
   sha256: caeceff0135b7fef5f392915c8362138b200eacda19d8fd78b223c538449dfb9
   patches:
-    - 0001-Add-missing-includes.patch
+    - 0001-Fix-errors-when-using-GCC-12.patch
 
 build:
   number: 6
