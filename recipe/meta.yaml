@@ -25,7 +25,7 @@ requirements:
   host:
     - python
     - root_base
-    - boost-cpp
+    - libboost-devel
     - hepmc2
     - yaml-cpp
     - numpy
@@ -35,7 +35,6 @@ requirements:
     - setuptools
   run:
     - python
-    - boost-cpp
     - yaml-cpp
     - hepmc2
     - {{ pin_compatible('numpy') }}
