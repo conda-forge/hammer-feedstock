@@ -30,7 +30,7 @@ requirements:
     - yaml-cpp
     - numpy
     - matplotlib-base
-    - cython
+    - cython <3
     - cymove
     - setuptools
   run:
