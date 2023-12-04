@@ -10,9 +10,10 @@ source:
   sha256: caeceff0135b7fef5f392915c8362138b200eacda19d8fd78b223c538449dfb9
   patches:
     - 0001-Fix-errors-when-using-GCC-12.patch
+    - 0002-Fix-TestProcess.cc-for-boost-1.81.patch
 
 build:
-  number: 6
+  number: 7
   skip: true  # [win or py2k]
 
 requirements:
@@ -25,17 +26,16 @@ requirements:
   host:
     - python
     - root_base
-    - boost-cpp
+    - libboost-devel
     - hepmc2
     - yaml-cpp
     - numpy
     - matplotlib-base
-    - cython
+    - cython <3
     - cymove
     - setuptools
   run:
     - python
-    - boost-cpp
     - yaml-cpp
     - hepmc2
     - {{ pin_compatible('numpy') }}
