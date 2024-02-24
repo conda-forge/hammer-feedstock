@@ -13,7 +13,7 @@ source:
     - 0002-Fix-TestProcess.cc-for-boost-1.81.patch
 
 build:
-  number: 8
+  number: 9
   skip: true  # [win or py2k]
 
 requirements:
