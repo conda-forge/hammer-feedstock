@@ -39,7 +39,6 @@ requirements:
     - python
     - yaml-cpp
     - hepmc2
-    - {{ pin_compatible('numpy') }}
     - matplotlib-base
   run_constrained:
 
