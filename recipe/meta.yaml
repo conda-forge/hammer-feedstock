@@ -1,5 +1,5 @@
 {% set name = "hammer" %}
-{% set version = "1.2.1" %}
+{% set version = "1.4.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,13 +7,13 @@ package:
 
 source:
   url: https://gitlab.com/mpapucci/Hammer/-/archive/v{{ version }}/Hammer-v{{ version }}.tar.gz
-  sha256: caeceff0135b7fef5f392915c8362138b200eacda19d8fd78b223c538449dfb9
+  sha256: b95e192727aa95ac736a269e84457adbdde3e85db15082da4129f4ed4c018c45
   patches:
     - 0001-Fix-errors-when-using-GCC-12.patch
     - 0002-Fix-TestProcess.cc-for-boost-1.81.patch
 
 build:
-  number: 10
+  number: 0
   skip: true  # [win or py2k]
 
 requirements:
