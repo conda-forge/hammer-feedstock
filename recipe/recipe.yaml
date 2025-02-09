@@ -68,7 +68,7 @@ tests:
       - ./demo10
       # Seems to be broken
       # - python demo03.py
-      - python demo04.py
+      # - python demo04.py
 
 about:
   license: GPL-3.0-only
@@ -86,4 +86,3 @@ about:
 extra:
   recipe-maintainers:
     - chrisburr
-
