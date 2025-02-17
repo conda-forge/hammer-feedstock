@@ -15,7 +15,7 @@ source:
     - 0001-Fix-support-for-newer-GCC.patch
 
 build:
-  number: 0
+  number: 1
   skip: win
 
 requirements:
