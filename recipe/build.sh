@@ -10,7 +10,7 @@ cmake ${CMAKE_ARGS} \
     -DWITH_ROOT=ON \
     -DWITH_EXAMPLES=ON \
     -DWITH_EXAMPLES_EXTRA=OFF \
-    -DENABLE_TESTS=ON \
+    -DENABLE_TESTS=OFF \
     -DBUILD_DOCUMENTATION=OFF \
     -DINSTALL_EXTERNAL_DEPENDENCIES=OFF \
     -DFORCE_YAMLCPP_INSTALL=OFF \
@@ -19,8 +19,4 @@ cmake ${CMAKE_ARGS} \
     ..
 
 make -j${CPU_COUNT}
-
-# Fails in the CI due to numerical precision issues
-# ctest -V
-
 make install
