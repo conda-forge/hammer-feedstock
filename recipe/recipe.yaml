@@ -15,7 +15,7 @@ source:
     - 0001-Fix-support-for-newer-GCC.patch
 
 build:
-  number: 2
+  number: 3
   skip: win
 
 requirements:
@@ -42,7 +42,8 @@ requirements:
     - yaml-cpp
     - hepmc2
     - matplotlib-base
-  run_constraints: run_constrained
+  run_constraints:
+    - run_constrained
 
 tests:
   - python:
