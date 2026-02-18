@@ -4,8 +4,7 @@ set -exu
 mkdir build
 cd build
 
-cmake \
-    -DCMAKE_INSTALL_PREFIX="${PREFIX}" \
+cmake ${CMAKE_ARGS} \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DWITH_PYTHON=ON \
     -DWITH_ROOT=ON \
