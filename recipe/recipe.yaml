@@ -13,7 +13,7 @@ source:
   sha256: b95e192727aa95ac736a269e84457adbdde3e85db15082da4129f4ed4c018c45
   patches:
     - 0001-Fix-support-for-newer-GCC.patch
-    - 0002-Fix-cmake-minimum-version.patch
+    - 0002-Fix-cmake-compatibility.patch
 
 build:
   number: 3

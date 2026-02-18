@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Tue, 18 Feb 2026 00:00:00 +0000
+Subject: [PATCH] Fix CMake 4+ compatibility
+
+CMake 4 removed compatibility with cmake_minimum_required < 3.5 and
+removed the TestEndianess.c.in template that TestBigEndianCXX.cmake
+depends on. Remove the endianness test entirely as PLATFORM_BIG_ENDIAN
+is never used in the source code.
+
+---
+ CMakeLists.txt                             | 2 +-
+ CMakeModules/CompilerChecks.cmake          | 3 ---
+ include/Hammer/Config/HammerConfig.hh.in   | 2 --
+ 3 files changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ # set minimum required cmake version
+-cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
++cmake_minimum_required(VERSION 3.5...3.31 FATAL_ERROR)
+
+ # make sure we are not going to build in the main source directory
+ set(CMAKE_DISABLE_SOURCE_CHANGES ON)
+diff --git a/CMakeModules/CompilerChecks.cmake b/CMakeModules/CompilerChecks.cmake
+--- a/CMakeModules/CompilerChecks.cmake
++++ b/CMakeModules/CompilerChecks.cmake
+@@ -117,9 +117,6 @@
+ 	endif()
+ endif(UNIX)
+
+-include(TestBigEndianCXX)
+-TEST_BIG_ENDIAN_CXX(IS_BIG_ENDIAN)
+-
+ include(CheckIncludeFileCXX)
+ # IF(COMPILER_SUPPORTS_CXX17 OR COMPILER_SUPPORTS_CXX1Z)
+ # 	check_include_file_cxx(experimental/filesystem HAVE_FILESYSTEM_TS)
+diff --git a/include/Hammer/Config/HammerConfig.hh.in b/include/Hammer/Config/HammerConfig.hh.in
+--- a/include/Hammer/Config/HammerConfig.hh.in
++++ b/include/Hammer/Config/HammerConfig.hh.in
+@@ -44,8 +44,6 @@
+
+ #define CACHE_LINE_SIZE @L2_Cache_Width@
+
+-#define PLATFORM_BIG_ENDIAN @IS_BIG_ENDIAN@
+-
+ #define INCLRCONFIG "@FIXROOTINCL@RConfig.h"
+
