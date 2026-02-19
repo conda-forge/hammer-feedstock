@@ -35,12 +35,11 @@ requirements:
     - yaml-cpp
     - numpy
     - matplotlib-base
-    - cython <3
+    - cython
     - cymove
     - setuptools
   run:
     - python
-    - hepmc2
     - matplotlib-base
 
 tests:
