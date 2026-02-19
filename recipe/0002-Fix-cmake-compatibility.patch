@@ -1,0 +1,67 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Burr <christopher.burr@cern.ch>
+Date: Tue, 18 Feb 2026 00:00:00 +0000
+Subject: [PATCH] Fix CMake 4+ compatibility
+
+CMake 4 removed compatibility with cmake_minimum_required < 3.5 and
+removed the TestEndianess.c.in template that TestBigEndianCXX.cmake
+depends on. Remove the endianness test entirely as PLATFORM_BIG_ENDIAN
+is never used in the source code.
+
+Also fix Hammer_PIC to always be a boolean value. On non-x86_64
+platforms, it was set to ${CMAKE_POSITION_INDEPENDENT_CODE} which may
+be empty/unset, causing set_target_properties to fail with CMake 4+
+when passed an empty value for POSITION_INDEPENDENT_CODE.
+
+---
+ CMakeLists.txt                             | 2 +-
+ CMakeModules/CompilerChecks.cmake          | 7 +------
+ include/Hammer/Config/HammerConfig.hh.in   | 2 --
+ 3 files changed, 2 insertions(+), 9 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ # set minimum required cmake version
+-cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
++cmake_minimum_required(VERSION 3.5...3.31 FATAL_ERROR)
+
+ # make sure we are not going to build in the main source directory
+ set(CMAKE_DISABLE_SOURCE_CHANGES ON)
+diff --git a/CMakeModules/CompilerChecks.cmake b/CMakeModules/CompilerChecks.cmake
+--- a/CMakeModules/CompilerChecks.cmake
++++ b/CMakeModules/CompilerChecks.cmake
+@@ -88,6 +88,10 @@
+ IF(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+ 	set(Hammer_PIC TRUE)
+ ELSE()
+-    set(Hammer_PIC ${CMAKE_POSITION_INDEPENDENT_CODE})
++    if(CMAKE_POSITION_INDEPENDENT_CODE)
++        set(Hammer_PIC TRUE)
++    else()
++        set(Hammer_PIC FALSE)
++    endif()
+ ENDIF()
+ message(STATUS "Process independent code flag is ${Hammer_PIC}.")
+@@ -117,9 +121,6 @@
+ 	endif()
+ endif(UNIX)
+
+-include(TestBigEndianCXX)
+-TEST_BIG_ENDIAN_CXX(IS_BIG_ENDIAN)
+-
+ include(CheckIncludeFileCXX)
+ # IF(COMPILER_SUPPORTS_CXX17 OR COMPILER_SUPPORTS_CXX1Z)
+ # 	check_include_file_cxx(experimental/filesystem HAVE_FILESYSTEM_TS)
+diff --git a/include/Hammer/Config/HammerConfig.hh.in b/include/Hammer/Config/HammerConfig.hh.in
+--- a/include/Hammer/Config/HammerConfig.hh.in
++++ b/include/Hammer/Config/HammerConfig.hh.in
+@@ -44,8 +44,6 @@
+
+ #define CACHE_LINE_SIZE @L2_Cache_Width@
+
+-#define PLATFORM_BIG_ENDIAN @IS_BIG_ENDIAN@
+-
+ #define INCLRCONFIG "@FIXROOTINCL@RConfig.h"
+

@@ -13,9 +13,10 @@ source:
   sha256: b95e192727aa95ac736a269e84457adbdde3e85db15082da4129f4ed4c018c45
   patches:
     - 0001-Fix-support-for-newer-GCC.patch
+    - 0002-Fix-cmake-compatibility.patch
 
 build:
-  number: 2
+  number: 3
   skip: win
 
 requirements:
@@ -34,15 +35,12 @@ requirements:
     - yaml-cpp
     - numpy
     - matplotlib-base
-    - cython <3
+    - cython
     - cymove
     - setuptools
   run:
     - python
-    - yaml-cpp
-    - hepmc2
     - matplotlib-base
-  run_constraints: run_constrained
 
 tests:
   - python:
