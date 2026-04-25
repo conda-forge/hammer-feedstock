@@ -19,7 +19,7 @@ docker_image:
 hepmc2:
 - '2.06'
 libboost_devel:
-- '1.88'
+- '1.90'
 numpy:
 - '2'
 pin_run_as_build:
