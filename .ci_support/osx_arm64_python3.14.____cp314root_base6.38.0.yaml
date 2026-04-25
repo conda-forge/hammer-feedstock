@@ -21,7 +21,7 @@ cxx_compiler_version:
 hepmc2:
 - '2.06'
 libboost_devel:
-- '1.88'
+- '1.90'
 macos_machine:
 - arm64-apple-darwin20.0.0
 numpy:
