@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: hammer
-  version: 1.4.1
+  version: "2.0.0"
 
 package:
   name: ${{ name|lower }}
@@ -10,13 +10,13 @@ package:
 
 source:
   url: https://gitlab.com/mpapucci/Hammer/-/archive/v${{ version }}/Hammer-v${{ version }}.tar.gz
-  sha256: b95e192727aa95ac736a269e84457adbdde3e85db15082da4129f4ed4c018c45
+  sha256: 0fab1c9c2f1f9cc0b20250dc53d97ee49e723c2e927e9c913ecc1418f1d73019
   patches:
     - 0001-Fix-support-for-newer-GCC.patch
     - 0002-Fix-cmake-compatibility.patch
 
 build:
-  number: 6
+  number: 0
   skip: win
 
 requirements:
