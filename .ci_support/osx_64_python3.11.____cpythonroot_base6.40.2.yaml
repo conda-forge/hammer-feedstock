@@ -23,7 +23,7 @@ hepmc2:
 libboost_devel:
 - '1.88'
 macos_machine:
-- arm64-apple-darwin20.0.0
+- x86_64-apple-darwin13.4.0
 numpy:
 - '2'
 pin_run_as_build:
@@ -31,11 +31,11 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- 3.14.* *_cp314
+- 3.11.* *_cpython
 root_base:
-- 6.40.0
+- 6.40.2
 target_platform:
-- osx-arm64
+- osx-64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
