@@ -16,7 +16,7 @@ source:
     - 0002-Fix-cmake-compatibility.patch
 
 build:
-  number: 5
+  number: 6
   skip: win
 
 requirements:
