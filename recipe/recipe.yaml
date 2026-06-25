@@ -11,9 +11,6 @@ package:
 source:
   url: https://gitlab.com/mpapucci/Hammer/-/archive/v${{ version }}/Hammer-v${{ version }}.tar.gz
   sha256: 0fab1c9c2f1f9cc0b20250dc53d97ee49e723c2e927e9c913ecc1418f1d73019
-  patches:
-    - 0001-Fix-support-for-newer-GCC.patch
-    - 0002-Fix-cmake-compatibility.patch
 
 build:
   number: 0
