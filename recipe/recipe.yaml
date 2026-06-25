@@ -28,7 +28,7 @@ requirements:
     - python
     - root_base
     - libboost-devel
-    - hepmc2
+    - hepmc3
     - yaml-cpp
     - numpy
     - matplotlib-base
