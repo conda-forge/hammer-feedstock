@@ -18,5 +18,21 @@ cmake ${CMAKE_ARGS} \
     -DPython3_EXECUTABLE="$PYTHON" \
     ..
 
+# Hammer silently downgrades to a C++-only build (WITH_PYTHON OFF) if its Python
+# build tooling is missing, so assert the bindings stayed enabled before building.
+grep -q '^WITH_PYTHON:BOOL=ON$' CMakeCache.txt || {
+    echo "ERROR: Hammer disabled its Python bindings during CMake configure" >&2
+    exit 1
+}
+
 make -j${CPU_COUNT}
 make install
+
+# The wheel build/install runs inside a CMake execute_process() that swallows
+# errors, so verify the module actually landed instead of failing later as an
+# ImportError in the test phase.
+site_packages=$("$PYTHON" -c "import sysconfig; print(sysconfig.get_path('purelib'))")
+if [[ ! -d "${site_packages}/hammer" ]]; then
+    echo "ERROR: the 'hammer' Python module was not installed into ${site_packages}" >&2
+    exit 1
+fi

@@ -13,6 +13,7 @@ source:
   sha256: 0fab1c9c2f1f9cc0b20250dc53d97ee49e723c2e927e9c913ecc1418f1d73019
   patches:
     - cxx20_aggregate_init.patch
+    - pyext_no_build_isolation.patch
 
 build:
   number: 0
@@ -36,7 +37,10 @@ requirements:
     - matplotlib-base
     - cython
     - cymove
-    - setuptools
+    - setuptools >=77.0.3
+    - python-build
+    - wheel
+    - pip
   run:
     - python
     - matplotlib-base
