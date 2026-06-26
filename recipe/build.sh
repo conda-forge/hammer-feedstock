@@ -4,18 +4,12 @@ set -exu
 mkdir build
 cd build
 
-# Hammer installs its libraries into the lib/Hammer/ subdirectory rather than
-# lib/, so consumers need that directory on their RPATH. Build shared libraries
-# and bake the install RPATH into every binary -- including libpyHammer, which is
-# copied out of the build tree into the wheel, so it must already carry the final
-# RPATH (CMAKE_BUILD_WITH_INSTALL_RPATH) to find the Hammer .so/.dylib from
-# site-packages at import time.
+# Build shared libraries. Hammer's own RPATH handling (corrected in
+# rpath_for_shared_libs.patch) bakes the lib/Hammer location into the binaries
+# and overrides command-line RPATH flags, so none are set here.
 cmake ${CMAKE_ARGS} \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DBUILD_SHARED_LIBS=ON \
-    -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON \
-    -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
-    -DCMAKE_INSTALL_RPATH="${PREFIX}/lib;${PREFIX}/lib/Hammer" \
     -DWITH_PYTHON=ON \
     -DWITH_ROOT=ON \
     -DWITH_EXAMPLES=ON \

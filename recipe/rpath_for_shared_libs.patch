@@ -1,0 +1,36 @@
+From: conda-forge
+Subject: [PATCH] Fix shared-library RPATHs for the Python module and examples
+
+With BUILD_SHARED_LIBS=ON the Hammer libraries live in lib/Hammer/, but the
+cppyy module (libpyHammer) is copied out of the build tree into a wheel under
+site-packages and the example programs live under share/, none of which sit
+next to lib/Hammer/. The previous logic used CMAKE_BUILD_WITH_INSTALL_RPATH=OFF
+(so the copied libpyHammer kept a build-tree RPATH) and a bare $ORIGIN on Linux,
+so libHammerCore.so.* could not be found at load time. Bake the install RPATH in
+and point it at the actual library directories.
+---
+--- a/CMakeModules/CompilerChecks.cmake
++++ b/CMakeModules/CompilerChecks.cmake
+@@ -78,15 +78,13 @@
+     # use, i.e. don't skip the full RPATH for the build tree
+     SET(CMAKE_SKIP_BUILD_RPATH FALSE)
+ 
+-    # when building, don't use the install RPATH already
+-    # (but later on when installing)
+-    set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+-
+-    if(NOT APPLE)
+-        set(CMAKE_INSTALL_RPATH $ORIGIN)
+-    else()
+-        set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}/Hammer")
+-    endif()
++    # The Python bindings (libpyHammer) are copied out of the build tree into a
++    # wheel, and consumers live outside lib/Hammer (the module in site-packages,
++    # the examples in share/), so bake the install RPATH into the build artifacts
++    # and point it at the real library directories. A bare $ORIGIN (the previous
++    # Linux value) only resolves when the libraries sit next to their consumer.
++    set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
++    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR};${CMAKE_INSTALL_FULL_LIBDIR}/Hammer")
+ 
+     # add the automatically determined parts of the RPATH
+     # which point to directories outside the build tree to the install RPATH
