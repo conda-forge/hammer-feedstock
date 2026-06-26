@@ -1,0 +1,41 @@
+From: conda-forge
+Subject: [PATCH] Build position-independent code on all architectures
+
+The fPIC check only matched x86_64 and the macOS "arm64" spelling of the
+processor; on others (notably Linux "aarch64") it fell through to
+${CMAKE_POSITION_INDEPENDENT_CODE}, which is unset by default and expands to an
+empty string, so Hammer_PIC became empty and every set_target_properties(...
+POSITION_INDEPENDENT_CODE ${Hammer_PIC} ...) failed with "incorrect number of
+arguments". The libraries are archived into the shared pyHammer module, so
+default to PIC on every architecture while still honouring an explicitly set
+CMAKE_POSITION_INDEPENDENT_CODE.
+---
+--- a/CMakeModules/CompilerChecks.cmake
++++ b/CMakeModules/CompilerChecks.cmake
+@@ -53,15 +53,18 @@
+ endif()
+ 
+ # setting fPIC
+-message(STATUS "${CMAKE_SYSTEM_PROCESSOR}")
++# All Hammer libraries can be archived into the shared pyHammer bindings module,
++# so default to position-independent code on every architecture; honour an
++# explicit CMAKE_POSITION_INDEPENDENT_CODE when one is provided. The previous
++# x86_64/arm64 allow-list left Hammer_PIC empty on other processors (e.g.
++# aarch64), which broke the set_target_properties() calls that consume it.
++if(DEFINED CMAKE_POSITION_INDEPENDENT_CODE)
++    set(Hammer_PIC ${CMAKE_POSITION_INDEPENDENT_CODE})
++else()
++    set(Hammer_PIC TRUE)
++endif()
+ 
+-IF(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
+-    set(Hammer_PIC TRUE)
+-ELSE()
+-    set(Hammer_PIC ${CMAKE_POSITION_INDEPENDENT_CODE})
+-ENDIF()
+-
+-message(STATUS "Process independent code flag is ${Hammer_PIC}.")
++message(STATUS "Position independent code flag is ${Hammer_PIC}.")
+ 
+ IF(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+     SET(CMAKE_BUILD_TYPE Release CACHE STRING

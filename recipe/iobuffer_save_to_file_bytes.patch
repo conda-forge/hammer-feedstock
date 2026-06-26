@@ -1,0 +1,19 @@
+From: conda-forge
+Subject: [PATCH] Materialise IOBuffer view before writing to a file
+
+IOBuffer.save_to_file wrote the raw cppyy LowLevelView over the buffer
+directly to the file handler. io.BytesIO tolerates that buffer-protocol
+object, but a real io.BufferedWriter memcpy's from it and segfaults
+(demo01_io.py). Materialise it to bytes first.
+---
+--- a/pyext/wrapper_cppyy/root_pythonizer.py
++++ b/pyext/wrapper_cppyy/root_pythonizer.py
+@@ -108,7 +108,7 @@
+         file_handler.write(pack(b'<L', self.length))
+         data = ll.cast['uint8_t*'](self.start)
+         data.reshape((self.length,))
+-        file_handler.write(data)
++        file_handler.write(bytes(data))
+ 
+     def load_from_file(self, file_handler: BufferedIOBase) -> bool:
+         tmp = file_handler.read(1)

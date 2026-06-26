@@ -14,6 +14,9 @@ source:
   patches:
     - cxx20_aggregate_init.patch
     - pyext_no_build_isolation.patch
+    - pic_all_architectures.patch
+    - demo01root_python_literals.patch
+    - iobuffer_save_to_file_bytes.patch
 
 build:
   number: 0

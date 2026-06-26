@@ -1,0 +1,17 @@
+From: conda-forge
+Subject: [PATCH] Fix C++ integer literals in demo01root.py
+
+demo01root.py used C++ unsigned-long literals (64ul) in a Python source
+file, which is a SyntaxError. Use plain Python integers.
+---
+--- a/Examples/demo01root.py
++++ b/Examples/demo01root.py
+@@ -45,7 +45,7 @@
+     eventNumber = array('l',[0])
+     processIds = array('L',[0,0])
+     treeBuffer = RootIOBuffer()
+-    treeBuffer.init(64ul * 1024ul * 1024ul)
++    treeBuffer.init(64 * 1024 * 1024)
+     tree.Branch("ev_number", eventNumber, "ev_number/I")
+     tree.Branch("proc_ids", processIds, "proc_ids[2]/l")
+     tree.Branch("type", ROOT.addressof(treeBuffer, 'kind'), "type/B")
