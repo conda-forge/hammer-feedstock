@@ -1,0 +1,19 @@
+From: conda-forge
+Subject: [PATCH] Build the Python wheel without build isolation
+
+conda-forge build environments have no network access, but `python -m build`
+defaults to an isolated build that pip-installs the build-system requirements
+from PyPI. Pass --no-isolation so the wheel is built against the setuptools
+and build packages already provided as host dependencies.
+---
+--- a/pyext/CMakeLists.txt
++++ b/pyext/CMakeLists.txt
+@@ -55,7 +55,7 @@
+ 
+ add_custom_target(SetupTools ALL DEPENDS PythonPackages)
+ add_custom_command(TARGET SetupTools POST_BUILD
+-  COMMAND ${Python3_EXECUTABLE} "-m" "build" "--wheel" WORKING_DIRECTORY "${WDIR}")
++  COMMAND ${Python3_EXECUTABLE} "-m" "build" "--wheel" "--no-isolation" WORKING_DIRECTORY "${WDIR}")
+ 
+ # need to find the actual path without relying on pip to avoid the local non-local snafu on certain linux platforms.
+ execute_process(

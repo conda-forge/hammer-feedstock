@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: hammer
-  version: 1.4.1
+  version: "2.0.0"
 
 package:
   name: ${{ name|lower }}
@@ -10,14 +10,20 @@ package:
 
 source:
   url: https://gitlab.com/mpapucci/Hammer/-/archive/v${{ version }}/Hammer-v${{ version }}.tar.gz
-  sha256: b95e192727aa95ac736a269e84457adbdde3e85db15082da4129f4ed4c018c45
+  sha256: 0fab1c9c2f1f9cc0b20250dc53d97ee49e723c2e927e9c913ecc1418f1d73019
   patches:
-    - 0001-Fix-support-for-newer-GCC.patch
-    - 0002-Fix-cmake-compatibility.patch
+    - cxx20_aggregate_init.patch
+    - pyext_no_build_isolation.patch
+    - pic_all_architectures.patch
+    - rpath_for_shared_libs.patch
+    - demo01root_python_literals.patch
+    - iobuffer_save_to_file_bytes.patch
 
 build:
-  number: 6
-  skip: win
+  number: 0
+  skip:
+    - win
+    - ppc64le
 
 requirements:
   build:
@@ -31,13 +37,16 @@ requirements:
     - python
     - root_base
     - libboost-devel
-    - hepmc2
+    - hepmc3
     - yaml-cpp
     - numpy
     - matplotlib-base
     - cython
     - cymove
-    - setuptools
+    - setuptools >=77.0.3
+    - python-build
+    - wheel
+    - pip
   run:
     - python
     - matplotlib-base
@@ -47,8 +56,42 @@ tests:
       imports:
         - hammer
       pip_check: false
+  - package_contents:
+      strict: true
+      site_packages:
+        - hammer
+      include:
+        - Hammer/Hammer.hh
+        - Hammer/Process.hh
+        - Hammer/Particle.hh
+      files:
+        # C++ libraries live under lib/Hammer/ (not $PREFIX/lib), so the lib: key
+        # can't be used. They set SOVERSION, so each ships a versioned family
+        # (libFoo.so/.so.2/.so.2.0.0 on Linux; libFoo.dylib/.2.0.0.dylib on macOS).
+        # ".*" covers the whole family -- a bare SHLIB_EXT would miss the versioned
+        # files (and ".so.N" on Linux is not even a suffix match).
+        - lib/Hammer/libHammerBase.*
+        - lib/Hammer/libHammerCore.*
+        - lib/Hammer/libHammerMath.*
+        - lib/Hammer/libHammerTensor.*
+        - lib/Hammer/libHammerTools.*
+        - lib/Hammer/libAmplitudes.*
+        - lib/Hammer/libFormFactors.*
+        - lib/Hammer/libRates.*
+        - include/Hammer/**
+        - include/flatbuffers/**
+        - lib/cmake/Hammer/HammerConfig.cmake
+        - lib/cmake/Hammer/**
+        - lib/pkgconfig/Hammer.pc
+        - lib/python*/site-packages/hammer/__init__.py
+        - lib/python*/site-packages/hammer/libpyHammer.*
+        - lib/python*/site-packages/hammer/**
+        - lib/python*/site-packages/hammer-*.dist-info/**
+        - share/Hammer/examples/demo01
+        - share/Hammer/examples/**
   - script:
       - cd $CONDA_PREFIX/share/Hammer/examples
+      # demo04mma/demo08mma omitted: they need Mathematica
       - ./demo01
       - ./demo01card
       - ./demo01root
@@ -57,6 +100,7 @@ tests:
       - ./demo03
       - ./demo03root
       - ./demo04
+      - ./demo04parallel
       - ./demo04root
       - ./demo04root2
       - ./demo05
@@ -64,9 +108,17 @@ tests:
       - ./demo08
       - ./demo09
       - ./demo10
-      # Seems to be broken
-      # - python demo03.py
-      # - python demo04.py
+      - ./demo11
+      - ./demo12
+      - ./demo13
+      - ./demo13rl
+      - ./demo14
+      - python demo01.py
+      - python demo01_io.py
+      - python demo01root.py
+      - python demo02.py
+      - python demo03.py
+      - python demo04.py
 
 about:
   license: GPL-3.0-only

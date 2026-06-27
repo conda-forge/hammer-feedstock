@@ -18,8 +18,8 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '19'
-hepmc2:
-- '2.06'
+hepmc3:
+- '3.3'
 libboost_devel:
 - '1.90'
 macos_machine:

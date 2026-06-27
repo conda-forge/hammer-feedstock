@@ -1,0 +1,45 @@
+From: conda-forge
+Subject: [PATCH] Fix C++20 aggregate initialization of Vertex, HistoInfo and NumDenPair
+
+ROOT 6.40 propagates cxx_std_20 via its INTERFACE compile features, which
+raises Hammer's requested cxx_std_17 to C++20 for the whole build. Under
+C++20 (P1008R1) a class with any user-declared constructor - including a
+defaulted one declared in-class - is no longer an aggregate, so the
+member-wise brace initialization of these structs stops compiling with
+"no matching constructor". Dropping the redundant defaulted default
+constructor restores aggregate status; the implicit default constructor is
+still generated, so default construction keeps working.
+---
+--- a/include/Hammer/Math/MultiDim/Ops/DotOuterOptimizer.hh
++++ b/include/Hammer/Math/MultiDim/Ops/DotOuterOptimizer.hh
+@@ -58,8 +58,6 @@
+ 
+         struct Vertex {
+             enum class Type : std::uint8_t { LEFT, RIGHT, COLLAPSED, UNUSED };
+-
+-            Vertex() = default;
+ 
+             Type _type;
+             VertexId _outerPosition;
+--- a/include/Hammer/Tools/IOTypes.hh
++++ b/include/Hammer/Tools/IOTypes.hh
+@@ -145,8 +145,6 @@
+ 
+     struct HistoInfo {
+ 
+-        HistoInfo() = default;
+-
+         std::string name;
+         std::string scheme;
+         std::string specialization;
+--- a/include/Hammer/IndexTypes.hh
++++ b/include/Hammer/IndexTypes.hh
+@@ -152,8 +152,6 @@
+     template <typename T>
+     struct NumDenPair {
+ 
+-        NumDenPair() = default;
+-
+         T numerator;
+         T denominator;
+ 
