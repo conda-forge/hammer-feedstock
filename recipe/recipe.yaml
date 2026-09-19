@@ -20,7 +20,7 @@ source:
     - iobuffer_save_to_file_bytes.patch
 
 build:
-  number: 0
+  number: 1
   skip:
     - win
     - ppc64le
