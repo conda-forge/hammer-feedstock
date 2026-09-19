@@ -17,6 +17,7 @@ source:
     - pic_all_architectures.patch
     - rpath_for_shared_libs.patch
     - demo01root_python_literals.patch
+    - demo01root_dangling_branch_addresses.patch
     - iobuffer_save_to_file_bytes.patch
 
 build:

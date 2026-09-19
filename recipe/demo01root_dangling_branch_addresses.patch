@@ -1,0 +1,73 @@
+From: conda-forge
+Subject: [PATCH] Fix dangling TTree branch addresses in demo01root.py
+
+demo01root.py is a literal transcription of demo01root.cc, but two C++
+assignments became Python rebindings, which do not write through to the
+object whose address TTree::Branch was given.
+
+  eventNumber = i + 1   drops the array('l') whose buffer backs the
+                        "ev_number" branch, so the branch points at freed
+                        memory for the whole event loop.
+
+  treeBuffer = elem     drops the RootIOBuffer whose "kind"/"length" fields
+                        back the "type"/"length" branches. RootIOBuffer has
+                        no destructor, so "start" (64 MiB) leaks and stays
+                        mapped, but the object itself is freed: the next
+                        Fill() reads a garbage "length" and then walks
+                        "record[length]" off the end of "start". That is
+                        the segfault in TBranch::FillLeavesImpl seen
+                        intermittently on linux-aarch64.
+
+Assign through the array element and via RootIOBuffer::operator=, as the
+rest of the file already does for saveRunHeader/saveEventWeights/saveRates.
+array('l') is also 8 bytes where the branch declares "ev_number/I" (4);
+use array('i') to match, as demo01root.cc uses Int_t.
+---
+--- a/Examples/demo01root.py
++++ b/Examples/demo01root.py
+@@ -41,9 +41,9 @@ if __name__ == '__main__':
+     outFile = ROOT.TFile.Open("./DemoWeights.root", "RECREATE")
+     ## prepares the tree
+     tree = ROOT.TTree("Hammer", "Hammer output Tree")
+     tree.SetDirectory(outFile)
+-    eventNumber = array('l',[0])
++    eventNumber = array('i',[0])
+     processIds = array('L',[0,0])
+     treeBuffer = RootIOBuffer()
+     treeBuffer.init(64 * 1024 * 1024)
+     tree.Branch("ev_number", eventNumber, "ev_number/I")
+@@ -83,13 +83,13 @@ if __name__ == '__main__':
+     while i < 10000:
+         adapter.read_event(ge)
+         if adapter.failed():
+             break
+-        eventNumber = i + 1
++        eventNumber[0] = i + 1
+         processIds[0] = 0
+         processIds[1] = 0
+-        if eventNumber % 1000 == 0: 
+-                print(f"processing event {eventNumber}")
++        if eventNumber[0] % 1000 == 0: 
++                print(f"processing event {eventNumber[0]}")
+         ## look for decay processes starting with B mesons
+         processes = parseGenEvent(ge, {521, -521, 511, -511})
+         ## can also use Hammer PDG constants for increased readability
+         ## auto processes = parseGenEvent(ge, {PID::BPLUS, PID::BMINUS, PID::BZERO, -PID::BZERO});
+@@ -111,15 +111,15 @@ if __name__ == '__main__':
+         i += 1
+     ## save the total rates (optional)
+     processIds[0] = 0
+     processIds[1] = 0
+-    eventNumber = 0
++    eventNumber[0] = 0
+     fbBuffer = ham.saveRates()
+     treeBuffer.__assign__(fbBuffer)
+     tree.Fill()
+     ## save the sum of weights of processed events (the ones for which processEvent() has been called)
+     for elem in ham.saveHistogram("Total Sum of Weights"):
+-        treeBuffer = elem
++        treeBuffer.__assign__(elem)
+         tree.Fill()
+ 
+ 
+ 
